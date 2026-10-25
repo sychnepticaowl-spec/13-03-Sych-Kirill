@@ -14,7 +14,6 @@
 - [Подготовка стенда](#-подготовка-стенда)
 - [Задание 1: Разведка nmap](#-задание-1-разведка-nmap)
 - [Задание 2: Hydra и Fail2Ban](#-задание-2-hydra-и-fail2ban)
-- [Воспроизведение](#-воспроизведение)
 
 ---
 
@@ -130,15 +129,3 @@ Banned IP list: 10.0.3.7 172.28.0.2
 
 ---
 
-## 🔄 Воспроизведение
-
-```bash
-./lab/lab-up.sh
-sudo cp config/fail2ban-host/jail.local /etc/fail2ban/jail.local
-sudo systemctl restart suricata fail2ban
-./scripts/task1-recon.sh 172.28.0.10    # или sudo nmap вручную
-./scripts/task2-hydra.sh 172.28.0.10
-python3 scripts/render-screenshots.py
-```
-
-Сдача: ссылка на этот **README.md** в репозитории **13-03-Sych-Kirill**.
