@@ -1,0 +1,15 @@
+[DEFAULT]
+bantime = 600
+findtime = 120
+maxretry = 3
+ignoreself = false
+
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+backend = systemd
+journalmatch = _SYSTEMD_UNIT=sshd.service + _COMM=sshd
+maxretry = 3
+bantime = 600
+findtime = 120

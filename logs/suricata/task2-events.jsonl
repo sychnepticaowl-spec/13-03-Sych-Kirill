@@ -1,0 +1,2 @@
+# Фрагмент /var/log/suricata/eve.json после hydra/nmap (172.28.0.1 -> 172.28.0.10)
+{"timestamp":"2026-10-25T14:11:13+0000","event_type":"stats","stats":{"detect":{"alert":0},"tcp":{"syn":120,"synack":45}}}

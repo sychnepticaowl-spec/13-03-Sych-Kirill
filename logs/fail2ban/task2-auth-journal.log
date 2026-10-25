@@ -1,0 +1,15 @@
+окт 25 17:17:40 user-VirtualBox sshd[48944]: Invalid user wronguser from 127.0.0.1 port 37708
+окт 25 17:17:40 user-VirtualBox sshd[48944]: pam_unix(sshd:auth): check pass; user unknown
+окт 25 17:17:40 user-VirtualBox sshd[48944]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=127.0.0.1
+окт 25 17:17:42 user-VirtualBox sshd[48944]: Failed password for invalid user wronguser from 127.0.0.1 port 37708 ssh2
+окт 25 17:17:44 user-VirtualBox sshd[48944]: Connection closed by invalid user wronguser 127.0.0.1 port 37708 [preauth]
+окт 25 17:17:44 user-VirtualBox sshd[48949]: Invalid user wronguser from 127.0.0.1 port 37724
+окт 25 17:17:44 user-VirtualBox sshd[48949]: pam_unix(sshd:auth): check pass; user unknown
+окт 25 17:17:44 user-VirtualBox sshd[48949]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=127.0.0.1
+окт 25 17:17:45 user-VirtualBox sshd[48949]: Failed password for invalid user wronguser from 127.0.0.1 port 37724 ssh2
+окт 25 17:17:46 user-VirtualBox sshd[48949]: Connection closed by invalid user wronguser 127.0.0.1 port 37724 [preauth]
+окт 25 17:17:46 user-VirtualBox sshd[48954]: Invalid user wronguser from 127.0.0.1 port 37728
+окт 25 17:17:46 user-VirtualBox sshd[48954]: pam_unix(sshd:auth): check pass; user unknown
+окт 25 17:17:46 user-VirtualBox sshd[48954]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=127.0.0.1
+окт 25 17:17:48 user-VirtualBox sshd[48954]: Failed password for invalid user wronguser from 127.0.0.1 port 37728 ssh2
+окт 25 17:17:48 user-VirtualBox sshd[48954]: Connection closed by invalid user wronguser 127.0.0.1 port 37728 [preauth]

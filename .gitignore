@@ -1,5 +1,7 @@
 run/
-logs/
 bin/
 *.deb
 /tmp/
+logs/suricata/task1-eve-sample.json
+config/fail2ban-data/
+*.sqlite3

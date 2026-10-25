@@ -1,0 +1,25 @@
+2026-10-25 17:18:33,210 fail2ban.jail           [49625]: INFO    Jail 'sshd' uses systemd {}
+2026-10-25 17:18:33,216 fail2ban.filtersystemd  [49625]: INFO    [sshd] Added journal match for: '_SYSTEMD_UNIT=sshd.service + _COMM=sshd'
+2026-10-25 17:18:33,217 fail2ban.jail           [49625]: INFO    Jail 'sshd' started
+2026-10-25 17:18:33,218 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:17:57
+2026-10-25 17:18:33,218 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:17:58
+2026-10-25 17:18:33,219 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:17:59
+2026-10-25 17:18:33,219 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:01
+2026-10-25 17:18:33,219 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:02
+2026-10-25 17:18:33,219 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:05
+2026-10-25 17:18:33,219 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:06
+2026-10-25 17:18:33,219 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:08
+2026-10-25 17:18:33,219 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:10
+2026-10-25 17:18:33,220 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:13
+2026-10-25 17:18:33,220 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:14
+2026-10-25 17:18:33,220 fail2ban.filter         [49625]: INFO    [sshd] Found 10.0.3.7 - 2026-10-25 17:18:16
+2026-10-25 17:18:33,220 fail2ban.filtersystemd  [49625]: INFO    [sshd] Jail is in operation now (process new journal entries)
+2026-10-25 17:18:33,418 fail2ban.actions        [49625]: NOTICE  [sshd] Ban 10.0.3.7
+2026-10-25 17:18:33,462 fail2ban.actions        [49625]: NOTICE  [sshd] 10.0.3.7 already banned
+2026-10-25 17:18:33,467 fail2ban.actions        [49625]: NOTICE  [sshd] 10.0.3.7 already banned
+2026-10-25 17:18:33,467 fail2ban.actions        [49625]: NOTICE  [sshd] 10.0.3.7 already banned
+2026-10-25 17:18:37,811 fail2ban.filter         [49625]: INFO    [sshd] Found 172.28.0.2 - 2026-10-25 17:18:37
+2026-10-25 17:18:40,023 fail2ban.filter         [49625]: INFO    [sshd] Found 172.28.0.2 - 2026-10-25 17:18:39
+2026-10-25 17:18:41,561 fail2ban.filter         [49625]: INFO    [sshd] Found 172.28.0.2 - 2026-10-25 17:18:41
+2026-10-25 17:18:41,677 fail2ban.actions        [49625]: NOTICE  [sshd] Ban 172.28.0.2
+2026-10-25 17:18:43,561 fail2ban.filter         [49625]: INFO    [sshd] Found 172.28.0.2 - 2026-10-25 17:18:43

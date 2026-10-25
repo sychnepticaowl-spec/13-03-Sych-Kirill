@@ -1,6 +1,0 @@
-# tshark -r pcap/task2-udp.pcap (фрагмент)
-No.  Time     Source      Destination  Protocol  Info
-2    0.000100 127.0.0.1   127.0.0.1    ICMP      Destination unreachable (Port unreachable)
-9    0.000450 127.0.0.1   127.0.0.1    ICMP      Destination unreachable (Port unreachable)
-...  UDP 137 → NetBIOS NS ответ (open)
-...  UDP 161 → SNMP (open)

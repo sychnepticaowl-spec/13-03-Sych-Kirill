@@ -1,142 +1,144 @@
-# 🛡️ Домашнее задание 13-01: Уязвимости и атаки на информационные системы
+# 🛡️ Домашнее задание 13-03: Защита сети
 
 **Выполнил:** Сыч Кирилл  
 **Группа:** SFLT-58  
 **Дата:** 25 октября 2026
 
+[![Suricata](https://img.shields.io/badge/Suricata-7.0.3-red)](https://suricata.io/)
+[![Fail2Ban](https://img.shields.io/badge/Fail2Ban-1.1-blue)](https://github.com/fail2ban/fail2ban)
+
 ---
 
 ## 📋 Содержание
 
-- [Задание 1: Сканирование Metasploitable и поиск уязвимостей](#-задание-1-сканирование-metasploitable-и-поиск-уязвимостей)
-- [Задание 2: SYN, FIN, Xmas и UDP-сканирование](#-задание-2-syn-fin-xmas-и-udp-сканирование)
+- [Подготовка стенда](#-подготовка-стенда)
+- [Задание 1: Разведка nmap](#-задание-1-разведка-nmap)
+- [Задание 2: Hydra и Fail2Ban](#-задание-2-hydra-и-fail2ban)
+- [Воспроизведение](#-воспроизведение)
 
 ---
 
-## 🎯 Задание 1: Сканирование Metasploitable и поиск уязвимостей
+## 🧪 Подготовка стенда
 
-### ✅ Выполненные действия
+Установлено на **хосте** (Ubuntu):
 
-1. Запущена **Metasploitable 2** в Docker: `./lab/start-metasploitable.sh` (образ `q8dusty/metasploitable2`, `network_mode: host`).
-2. Цель сканирования с хоста: **127.0.0.1** (`localhost`).
-3. Выполнено: `nmap -sV --reason 127.0.0.1` (~152 с).
-4. По версиям служб — поиск эксплойтов на [Exploit Database](https://www.exploit-db.com/).
+- **Suricata** 7.0.3 — IDS на интерфейсе Docker `br-8155605f2906` (сеть `lab13`, `172.28.0.0/24`)
+- **Fail2Ban** — jail **`[sshd]`**, `enabled = true` ([config/fail2ban-host/jail.local](config/fail2ban-host/jail.local) → `/etc/fail2ban/jail.local`)
+- **openssh-server** на хосте (для демонстрации блокировки)
+- **nmap**, **hydra**
 
-**Артефакты:** [scans/task1-sV.txt](scans/task1-sV.txt) · [scripts/task1-nmap.sh](scripts/task1-nmap.sh)
-
-### 🌐 Какие сетевые службы разрешены?
-
-По результатам `nmap -sV` (22 открытых TCP-порта; **978** портов **closed**, `conn-refused`):
-
-| Порт | Служба | Версия |
-|------|--------|--------|
-| 21/tcp | FTP | vsftpd **2.3.4** |
-| 22/tcp | SSH | OpenSSH **4.7p1** |
-| 23/tcp | Telnet | Linux telnetd |
-| 25/tcp | SMTP | Postfix smtpd |
-| 80/tcp | HTTP | Apache **2.2.8** |
-| 111/tcp | rpcbind | RPC #100000 |
-| 139, 445/tcp | SMB | Samba smbd **3.X–4.X** |
-| 512/tcp | rexec | exec? |
-| 513/tcp | rlogin | login |
-| 514/tcp | rsh | tcpwrapped |
-| 631/tcp | IPP | CUPS 2.4 |
-| 1099/tcp | Java RMI | GNU Classpath grmiregistry |
-| 1524/tcp | shell | **Metasploitable bindshell** (root) |
-| 2121/tcp | FTP | ProFTPD **1.3.1** |
-| 3306/tcp | MySQL | **5.0.51a** |
-| 5432/tcp | PostgreSQL | **8.3.x** |
-| 5900/tcp | VNC | protocol 3.3 |
-| 6000/tcp | X11 | access denied |
-| 6667/tcp | IRC | **UnrealIRCd** |
-| 8009/tcp | AJP13 | Apache Jserv |
-| 8180/tcp | HTTP | Apache Tomcat |
-
-**UDP** (см. задание 2, [scans/task2-udp.txt](scans/task2-udp.txt)): открыты **137/netbios-ns**, **161/snmp**; **69/tftp** — `open|filtered`.
-
-**ОС:** Linux (CPE `linux_kernel`), hostname `metasploitable.localdomain`.
-
-### 🔓 Обнаруженные уязвимости (≥ 3)
-
-| № | Служба (версия из nmap) | Описание | Exploit-DB |
-|---|-------------------------|----------|------------|
-| 1 | vsftpd **2.3.4** | Backdoor: логин `user:)`, на **6200/tcp** — shell | [17491](https://www.exploit-db.com/exploits/17491) |
-| 2 | Samba **3.0.20** (семейство 3.x) | RCE `username map script` | [16320](https://www.exploit-db.com/exploits/16320) |
-| 3 | UnrealIRCd **3.2.8.1** (баннер IRC на :6667) | Backdoor в исходниках дистрибутива | [13853](https://www.exploit-db.com/exploits/13853) |
-
-Дополнительно по тем же результатам nmap:
-
-| Служба | Exploit-DB |
-|--------|------------|
-| ProFTPD 1.3.1 (`mod_copy`, CVE-2015-3306) | [36742](https://www.exploit-db.com/exploits/36742) |
-| MySQL 5.0.51a (слабые пароли, UDF) | [1518](https://www.exploit-db.com/exploits/1518) |
-| Java RMI / grmiregistry :1099 | [42753](https://www.exploit-db.com/exploits/42753) |
-
-**Вывод:** цель — намеренно уязвимый стенд; цепочка «nmap -sV → версия → Exploit-DB» даёт несколько подтверждённых точек входа для учебной эксплуатации **только в изолированной сети**.
-
-### 📸 Скриншот
-
-![Nmap -sV](screenshots/task1-nmap-sV.png)
-*Рисунок 1 — `nmap -sV --reason 127.0.0.1`*
-
----
-
-## 🎯 Задание 2: SYN, FIN, Xmas и UDP-сканирование
-
-### ✅ Выполненные действия
-
-1. Та же цель **127.0.0.1** (Metasploitable 2 в Docker).
-2. Захват трафика **tcpdump** на интерфейсе **lo** → [pcap/](pcap/) (`task2-syn.pcap`, `task2-fin.pcap`, `task2-xmas.pcap`, `task2-udp.pcap`). Скрипт: [scripts/capture-scans-pcap.sh](scripts/capture-scans-pcap.sh).
-3. Сканирования nmap (raw, Docker `instrumentisto/nmap`):
+| Роль | Компонент | Адрес |
+|------|-----------|--------|
+| Защищаемая система | Metasploitable 2 (Docker) | **172.28.0.10** |
+| IDS | Suricata (systemd) | мост **172.28.0.0/24** |
+| Злоумышленник | nmap / hydra с хоста и из Docker | **172.28.0.1**, **172.28.0.2** |
 
 ```bash
-nmap -sS -p 21,22,23,25,80,139,445,3306,5432,6667 127.0.0.1
-nmap -sF -p 21,22,23,25,80,139,445,3306,5432,6667 127.0.0.1
-nmap -sX -p 21,22,23,25,80,139,445,3306,5432,6667 127.0.0.1
-nmap -sU --top-ports 20 127.0.0.1
+./lab/lab-up.sh          # Metasploitable 172.28.0.10
+sudo systemctl enable --now suricata fail2ban ssh
 ```
 
-Логи: [scans/task2-syn.txt](scans/task2-syn.txt), [task2-fin.txt](scans/task2-fin.txt), [task2-xmas.txt](scans/task2-xmas.txt), [task2-udp.txt](scans/task2-udp.txt).
+---
 
-### 📊 Результаты nmap (факт)
+## 🎯 Задание 1: Разведка nmap
 
-**SYN** — все 10 портов **`open`** (21, 22, 23, 25, 80, 139, 445, 3306, 5432, 6667).
+### Команды (выполнены с sudo)
 
-**FIN и Xmas** — те же порты **`open|filtered`** (на Linux открытые порты часто не отвечают на FIN/Xmas).
+```bash
+sudo nmap -sA -F -oN scans/task1-sA.txt 172.28.0.10
+sudo nmap -sT -F -oN scans/task1-sT.txt 172.28.0.10
+sudo nmap -sS -F -oN scans/task1-sS.txt 172.28.0.10
+sudo nmap -sV -F -oN scans/task1-sV.txt 172.28.0.10
+```
 
-**UDP (top 20)** — **`open`:** 137, 161; **`open|filtered`:** 69; **`closed`:** 53, 67, 68, 123, … (ICMP port unreachable).
+Логи: [scans/](scans/).
 
-### 📡 Чем отличаются режимы по трафику?
+### Службы (фрагмент `-sV`)
 
-| Режим | Что шлёт nmap | Открытый TCP | Закрытый TCP | UDP |
-|-------|---------------|--------------|--------------|-----|
-| **SYN `-sS`** | SYN, при SYN-ACK — **RST** (half-open) | SYN-ACK | RST | — |
-| **FIN `-sF`** | TCP **FIN** | часто **тишина** | RST | — |
-| **Xmas `-sX`** | **FIN+PSH+URG** | как FIN | RST | — |
-| **UDP `-sU`** | UDP-датagram | — | — | ответ UDP или **ICMP type 3 code 3** |
+FTP **vsftpd 2.3.4**, SSH **OpenSSH 4.7p1**, HTTP **Apache 2.2.8**, MySQL **5.0.51a**, PostgreSQL **8.3.x**, SMB, Telnet и др. (см. `task1-sV.txt`).
 
-На **127.0.0.1** (loopback) SYN виден в Wireshark как **SYN → SYN-ACK → RST** ([scans/wireshark-syn.txt](scans/wireshark-syn.txt), [pcap/task2-syn.pcap](pcap/task2-syn.pcap)).
+### Suricata — события
 
-### 🖥️ Как отвечает сервер?
+**`/var/log/suricata/fast.log`** (копия: [logs/suricata/task1-fast-full.log](logs/suricata/task1-fast-full.log)):
 
-- **SYN:** на :22 — кадры `[SYN]`, затем `[SYN, ACK]`, затем `[RST]` от сканера (см. рис. 2).
-- **FIN / Xmas:** исходящие FIN (или «ёлка») на 21, 22, 80… **без ответа** на открытых портах → nmap: `open|filtered` ([scans/task2-fin.txt](scans/task2-fin.txt)).
-- **UDP:** на закрытые порты — **ICMP Destination unreachable (Port unreachable)**; на **137** и **161** — ответы служб ([scans/task2-udp.txt](scans/task2-udp.txt), [pcap/task2-udp.pcap](pcap/task2-udp.pcap)).
+```
+ET SCAN Possible Nmap User-Agent Observed
+{TCP} 172.28.0.1:39978 -> 172.28.0.10:80
+```
+
+**Комментарий:** при `-sV` nmap обращается к HTTP с типичным User-Agent — сработали правила **Emerging Threats** (класс *Web Application Attack*). Дополнительно в **eve.json** фиксируются **flow**-события между **172.28.0.1** и **172.28.0.10** ([logs/suricata/task1-events.jsonl](logs/suricata/task1-events.jsonl)).
+
+### Fail2Ban — задание 1
+
+При чистом сканировании портов **SSH-брутфорса нет** → jail `sshd` без новых банов. Jail **включён** (`enabled = true`).
 
 ### 📸 Скриншоты
 
-![SYN Wireshark](screenshots/task2-wireshark-syn.png)
-*Рисунок 2 — SYN-скан, порт 22: SYN / SYN-ACK / RST*
-
-![FIN Wireshark](screenshots/task2-wireshark-fin.png)
-*Рисунок 3 — FIN-скан: только FIN от клиента, ответа нет*
-
-![UDP Wireshark](screenshots/task2-wireshark-udp.png)
-*Рисунок 4 — UDP-скан: ICMP port unreachable*
-
-![SYN nmap](screenshots/task2-nmap-syn.png)
-*Рисунок 5 — вывод `nmap -sS`*
+![nmap](screenshots/task1-nmap-sS.png)  
+![Suricata](screenshots/task1-suricata.png)
 
 ---
 
+## 🎯 Задание 2: Hydra и Fail2Ban
 
+### Файлы hydra
+
+[attack/users.txt](attack/users.txt), [attack/pass.txt](attack/pass.txt) (в т.ч. **msfadmin / msfadmin**).
+
+### Fail2Ban — настройка `[sshd]`
+
+```ini
+[sshd]
+enabled = true
+maxretry = 3
+findtime = 120
+bantime = 600
+```
+
+Файл: `/etc/fail2ban/jail.local` (шаблон в репозитории).
+
+### Hydra
+
+```bash
+hydra -L attack/users.txt -P attack/pass.txt 172.28.0.10 ssh
+```
+
+Современный Hydra не договаривается с **OpenSSH 4.7** (host key/MAC); перебор завершён через **sshpass** с legacy-алгоритмами → **[FOUND] msfadmin:msfadmin** ([logs/hydra-task2.log](logs/hydra-task2.log)).
+
+**auth.log цели:** [logs/fail2ban/task2-target-auth.log](logs/fail2ban/task2-target-auth.log) — `Failed` / `Invalid user` / `Accepted password for msfadmin`.
+
+### Fail2Ban — события после атаки на SSH хоста
+
+Имитация брутфорса с Docker (**172.28.0.2** → **10.0.3.7:22**):
+
+```
+Found 172.28.0.2
+Ban 172.28.0.2
+Total failed: 16
+Currently banned: 2
+Banned IP list: 10.0.3.7 172.28.0.2
+```
+
+Логи: [logs/fail2ban/task2-fail2ban.log](logs/fail2ban/task2-fail2ban.log), [logs/fail2ban/task2-status.txt](logs/fail2ban/task2-status.txt).
+
+**Комментарий:** после **3** неудачных попыток в окне **findtime** Fail2Ban добавляет IP в **nftables/iptables** на **bantime** 600 с. Suricata при SSH-переборе к **172.28.0.10** видит рост TCP-сессий на **:22** (flow/stats в eve.json).
+
+### 📸 Скриншоты
+
+![Hydra](screenshots/task2-hydra.png)  
+![Fail2Ban](screenshots/task2-fail2ban.png)
+
+---
+
+## 🔄 Воспроизведение
+
+```bash
+./lab/lab-up.sh
+sudo cp config/fail2ban-host/jail.local /etc/fail2ban/jail.local
+sudo systemctl restart suricata fail2ban
+./scripts/task1-recon.sh 172.28.0.10    # или sudo nmap вручную
+./scripts/task2-hydra.sh 172.28.0.10
+python3 scripts/render-screenshots.py
+```
+
+Сдача: ссылка на этот **README.md** в репозитории **13-03-Sych-Kirill**.

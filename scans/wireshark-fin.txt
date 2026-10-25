@@ -1,6 +1,0 @@
-# tshark -r pcap/task2-fin.pcap (фрагмент)
-No.  Time     Source      Destination  Protocol  Info
-1    0.000000 127.0.0.1   127.0.0.1    TCP       49152 → 21 [FIN]
-2    0.000000 127.0.0.1   127.0.0.1    TCP       49152 → 22 [FIN]
-3    0.000000 127.0.0.1   127.0.0.1    TCP       49152 → 80 [FIN]
-...  (на открытых портах ответа нет → nmap: open|filtered)

@@ -1,0 +1,15 @@
+2026-10-25 14:10:18,420 fail2ban.server         [1]: INFO    Starting Fail2ban v1.1.1
+2026-10-25 14:10:18,420 fail2ban.observer       [1]: INFO    Observer start...
+2026-10-25 14:10:18,425 fail2ban.database       [1]: INFO    Connected to fail2ban persistent database '/data/db/fail2ban.sqlite3'
+2026-10-25 14:10:18,426 fail2ban.database       [1]: WARNING New database created. Version '4'
+2026-10-25 14:10:18,426 fail2ban.jail           [1]: INFO    Creating new jail 'sshd'
+2026-10-25 14:10:18,428 fail2ban.jail           [1]: INFO    Jail 'sshd' uses pyinotify {}
+2026-10-25 14:10:18,429 fail2ban.jail           [1]: INFO    Initiated 'pyinotify' backend
+2026-10-25 14:10:18,429 fail2ban.filter         [1]: INFO      maxLines: 1
+2026-10-25 14:10:18,434 fail2ban.datedetector   [1]: INFO      default filtered date pattern: 17 template(s)
+2026-10-25 14:10:18,434 fail2ban.filter         [1]: INFO      maxRetry: 3
+2026-10-25 14:10:18,434 fail2ban.filter         [1]: INFO      findtime: 120
+2026-10-25 14:10:18,434 fail2ban.actions        [1]: INFO      banTime: 600
+2026-10-25 14:10:18,434 fail2ban.filter         [1]: INFO      encoding: UTF-8
+2026-10-25 14:10:18,435 fail2ban.filter         [1]: INFO    Added logfile: '/var/log/auth.log' (pos = 0, hash = f28a17eaccf03c05d92fa86e0f6ab44434087762)
+2026-10-25 14:10:18,437 fail2ban.jail           [1]: INFO    Jail 'sshd' started

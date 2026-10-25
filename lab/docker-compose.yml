@@ -1,14 +1,44 @@
-# Metasploitable 2 в Docker (изолированная лаборатория)
-# Запуск: docker compose -f lab/docker-compose.yml up -d
-# Цель для nmap с хоста: 127.0.0.1 (режим network_mode: host)
-#
-# Внимание: intentionally vulnerable — не публикуйте порты наружу интернета.
+# Лаборатория 13-03: Suricata + Fail2Ban vs nmap/hydra
+# Сеть lab13: 172.28.0.0/24 — защищаемая система и IDS в одной подсети с атакующим (172.28.0.1).
 
 services:
-  metasploitable2:
+  target:
     image: q8dusty/metasploitable2:latest
-    container_name: metasploitable2
-    network_mode: host
-    privileged: true
-    restart: unless-stopped
+    container_name: ms2-target
+    networks:
+      lab13:
+        ipv4_address: 172.28.0.10
     command: ["sh", "-c", "/bin/services.sh && exec tail -f /dev/null"]
+    restart: unless-stopped
+
+  suricata:
+    image: jasonish/suricata:latest
+    container_name: suricata-lab
+    networks:
+      - lab13
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    command: ["-i", "eth0", "--set", "stream.memcap=128mb"]
+    restart: unless-stopped
+
+  ssh-guard:
+    image: lscr.io/linuxserver/openssh-server:latest
+    container_name: ssh-lab
+    networks:
+      lab13:
+        ipv4_address: 172.28.0.20
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Europe/Moscow
+      PASSWORD_ACCESS: "true"
+      USER_NAME: labuser
+      USER_PASSWORD: CorrectHorse
+    ports:
+      - "2222:2222"
+    restart: unless-stopped
+
+networks:
+  lab13:
+    external: true
